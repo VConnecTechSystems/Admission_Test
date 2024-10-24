@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admission Test</title>
+        <style>
+                /* Styling remains unchanged for layout and responsiveness */
+                body {
+                        font-family: 'Arial', sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background-color: #f5f5f5;
+                        user-select: none;
+                }
+
+                .paper-container {
+                        width: 90%;
+                        max-width: 900px;
+                        margin: 20px auto;
+                        background-color: #ffffff;
+                        padding: 30px;
+                        border: 1px solid #333;
+                        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+                        border-radius: 10px;
+                        position: relative;
+                        overflow: hidden;
+                }
+
+                .paper-header {
+                        text-align: center;
+                        margin-bottom: 20px;
+                }
+
+                .paper-header h1 {
+                        font-size: 2rem;
+                        margin-bottom: 10px;
+                }
+
+                .paper-header h2,
+                .paper-header h3 {
+                        font-size: 1.5rem;
+                        margin-bottom: 5px;
+                }
+
+                .logo {
+                        width: 100%;
+                        max-width: 280px;
+                        margin: 0 auto 20px;
+                        display: block;
+                }
+
+                .header-border {
+                        border-top: 2px solid #333;
+                        margin: 20px 0;
+                }
+
+                .sticky-timer {
+                        position: fixed;
+                        top: 0;
+                        right: 0;
+                        background-color: #ff4b4b;
+                        color: white;
+                        padding: 10px;
+                        font-size: 1.25rem;
+                        font-family: 'Courier New', monospace;
+                        z-index: 1000;
+                        border-radius: 0 0 0 10px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+
+                .sticky-timer span {
+                        margin-left: 10px;
+                        font-weight: bold;
+                }
+
+                .user-info {
+                        margin-bottom: 20px;
+                        text-align: center;
+                }
+
+                .user-info input {
+                        width: 90%;
+                        max-width: 400px;
+                        padding: 10px;
+                        margin: 5px 0;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        font-size: 1rem;
+                }
+
+                .code-sample {
+                        background-color: #e8e8e8;
+                        /* Light gray background for code */
+                        padding: 10px;
+                        /* Padding around the code */
+                        border: 1px solid #bbb;
+                        /* Border around the code */
+                        border-radius: 5px;
+                        /* Rounded corners for the code box */
+                        white-space: pre;
+                        /* Preserve formatting exactly as it is */
+                        font-family: 'Courier New', Courier, monospace;
+                        /* Monospace font for code */
+                        margin-bottom: 15px;
+                        /* Space below the code sample */
+                        max-width: 100%;
+                        /* Ensure it does not exceed the width of the container */
+                        overflow-x: auto;
+                        /* Allow horizontal scrolling if content is too wide */
+                        overflow-y: auto;
+                        line-height: 1.4;
+                        /* Improve readability with line spacing */
+                        text-align: left;
+                        /* Ensure text is aligned to the left */
+                        display: block;
+                        /* Ensure it behaves like a block element */
+                }
+
+                .question {
+                        margin-bottom: 30px;
+                        background-color: #f9f9f9;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        padding: 20px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        display: none;
+                        margin: 20px 0;
+
+                }
+
+                .question h2 {
+                        margin-bottom: 10px;
+                        font-size: 1.25rem;
+                        font-weight: bold;
+                }
+
+                .question label {
+                        display: block;
+                        margin-top: 8px;
+                        margin-bottom: 8px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        padding: 8px;
+                        border-radius: 4px;
+                        transition: background-color 0.3s;
+                }
+
+                .question input[type="radio"] {
+                        display: none;
+                }
+
+                .question input[type="radio"]+span {
+                        position: relative;
+                        padding-left: 25px;
+                        cursor: pointer;
+                }
+
+                .question input[type="radio"]+span:before {
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 18px;
+                        height: 18px;
+                        border: 2px solid #28a745;
+                        border-radius: 50%;
+                        background-color: #fff;
+                        transition: background-color 0.3s;
+                }
+
+                .question input[type="radio"]:checked+span:before {
+                        background-color: #28a745;
+                }
+
+                .styled-textarea {
+                        width: 100%;
+                        max-width: 800px;
+                        min-height: 200px;
+                        padding: 15px;
+                        font-size: 16px;
+                        font-family: 'Courier New', Courier, monospace;
+                        border: 2px solid #ccc;
+                        border-radius: 8px;
+                        background-color: #f9f9f9;
+                        resize: vertical;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        transition: border-color 0.3s, box-shadow 0.3s;
+                }
+
+                .styled-textarea:focus {
+                        border-color: #4CAF50;
+                        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                        outline: none;
+                }
+
+                .next-btn,
+                .back-btn {
+                        background-color: #007bff;
+                        color: white;
+                        padding: 10px 15px;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        display: block;
+                        margin: 10px auto;
+                        transition: background-color 0.3s;
+                }
+
+                .start-btn {
+                        background-color: #28a745;
+                        color: white;
+                        padding: 10px 15px;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        display: block;
+                        margin: 10px auto;
+                        transition: background-color 0.3s;
+                }
+
+                .next-btn:hover,
+                .back-btn:hover {
+                        background-color: #0056b3;
+                }
+
+                .start-btn:hover {
+                        background-color: #218838;
+                        ;
+                }
+
+                .submit-btn {
+                        background-color: #28a745;
+                        color: white;
+                        padding: 12px 20px;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 1.25rem;
+                        cursor: pointer;
+                        display: block;
+                        margin: 20px auto;
+                        transition: background-color 0.3s;
+                }
+
+                .submit-btn:hover {
+                        background-color: #218838;
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+                .thank-you-message {
+                        text-align: center;
+                        font-size: 1.5rem;
+                        color: #28a745;
+                        margin-top: 20px;
+                        display: none;
+                }
+
+                @media (max-width: 768px) {
+                        .paper-container {
+                                padding: 20px;
+                        }
+
+                        .paper-header h1 {
+                                font-size: 1.75rem;
+                        }
+
+                        .paper-header h2,
+                        .paper-header h3 {
+                                font-size: 1.25rem;
+                        }
+
+                        .sticky-timer {
+                                font-size: 1rem;
+                                padding: 8px;
+                        }
+
+                        .submit-btn {
+                                font-size: 1rem;
+                        }
+
+                        .next-btn {
+                                font-size: 1rem;
+                        }
+
+                        .back-btn {
+                                font-size: 1rem;
+                        }
+
+                        .start-btn {
+                                font-size: 1rem;
+                        }
+                }
+
+                @media (max-width: 480px) {
+                        .paper-container {
+                                padding: 15px;
+                        }
+
+                        .paper-header h1 {
+                                font-size: 1.5rem;
+                        }
+
+                        .paper-header h2,
+                        .paper-header h3 {
+                                font-size: 1rem;
+                        }
+
+                        .sticky-timer {
+                                font-size: 0.9rem;
+                                padding: 5px;
+                        }
+
+                        .submit-btn {
+                                font-size: 0.9rem;
+                        }
+
+                        .next-btn {
+                                font-size: 0.9rem;
+                        }
+
+                        .back-btn {
+                                font-size: 0.9rem;
+                        }
+
+                        .start-btn {
+                                font-size: 0.9rem;
+                        }
+
+                        .user-info input {
+                                font-size: 0.9rem;
+                        }
+
+                        .question h2 {
+                                font-size: 1rem;
+                        }
+
+                        .question label {
+                                font-size: 0.9rem;
+                        }
+                }
+        </style>
+</head>
+
+<body oncontextmenu="return false;">
+        <div class="sticky-timer" id="sticky-timer">
+                <span>Time Left:</span>
+                <span id="timer">01:30:00</span>
+        </div>
+
+        <div class="paper-container">
+                <div class="paper-header">
+                        <img src="./VConnect Technologies Logo.jpeg" alt="Logo" class="logo">
+                        <h1>VConnect Technologies</h1>
+                        <h2>Embedded & VLSI Training Problem</h2>
+                        <h2>Admission Test</h2>
+                        <h4>Duration: 90 Minutes</h4>
+                </div>
+
+
+                <div class="header-border"></div>
+
+                <div id="user-info" class="user-info" required>
+                        <input type="text" id="name" placeholder="Full Name" inputmode="text" required
+                                oninput="validateTextInput(this)">
+                        <input type="text" id="college" placeholder="College Name" inputmode="text" required
+                                oninput="validateTextInput(this)">
+                        <input type="email" id="email" placeholder="Email Id" inputmode="email" required>
+                        <input type="text" id="mobile" placeholder="Mobile Number" inputmode="tel" required
+                                oninput="validateMobileInput(this)">
+                        <button class="start-btn" onclick="startExam()">Start Exam</button>
+                </div>
+
+
+                <div id="exam-form">
+
+                        <div class="question" id="question1" style="text-align: left;">
+                                <h2>Question 1: An error 2% in excess is made while measuring the side of a square. The
+                                        percentage of error in the calculated area of the square is: </h2>
+
+                                <label><input type="radio" name="q1" value="2%"><span>2%</span></label>
+                                <label><input type="radio" name="q1" value="2.02%"><span>2.02%</span></label>
+                                <label><input type="radio" name="q1" value="4%"><span>4%</span></label>
+                                <label><input type="radio" name="q1" value="4.04%"><span>4.04%</span></label>
+                                <textarea id="answer1" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(1)">Next</button>
+                        </div>
+
+
+                        <div class="question" id="question2">
+                                <h2>Question 2: Two trains of equal length are running on parallel lines in the same
+                                        direction at 46 km/hr and 36 km/hr. The faster train passes the slower train in
+                                        36 seconds. The length of each train is:</h2>
+                                <label><input type="radio" name="q2" value="50m"><span>50m</span></label>
+                                <label><input type="radio" name="q2" value="70m"><span>70m</span></label>
+                                <label><input type="radio" name="q2" value="82m"><span>82m</span></label>
+                                <label><input type="radio" name="q2" value="60m"><span>60m</span></label>
+                                <textarea id="answer2" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(2)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(2)">Next</button>
+                        </div>
+
+                        <div class="question" id="question3">
+                                <h2>Question 3: A shopkeeper sold a T.V set for Rs. 17,940 with a discount of 8% and
+                                        earned a profit of 19.6%. What would have been the percentage of profit earned
+                                        if no discount was offered?</h2>
+                                <label><input type="radio" name="q3" value="25%"><span>25%</span></label>
+                                <label><input type="radio" name="q3" value="30%"><span>30%</span></label>
+                                <label><input type="radio" name="q3" value="50%"><span>50%</span></label>
+                                <label><input type="radio" name="q3" value="None of the above"><span>None of the
+                                                above</span></label>
+                                <textarea id="answer3" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(3)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(3)">Next</button>
+                        </div>
+
+                        <div class="question" id="question4">
+                                <h2>Question 4: A bag contains 4 white, 5 red and 6 blue balls. Three balls are drawn at
+                                        random from the bag. The probability that all of them are red, is:</h2>
+                                <label><input type="radio" name="q4" value="1/22"><span>1/22</span></label>
+                                <label><input type="radio" name="q4" value="3/22"><span>3/22</span></label>
+                                <label><input type="radio" name="q4" value="2/91"><span>2/91</span></label>
+                                <label><input type="radio" name="q4" value="2/77"><span>2/77</span></label>
+                                <textarea id="answer4" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(4)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(4)">Next</button>
+                        </div>
+
+                        <div class="question" id="question5">
+                                <h2>Question 5: A company offered its 350 employees a bonus of Rs 10 to each male and Rs
+                                        8.15 to each female. All the females accepted but a certain percentage of males
+                                        refused to accept. The total bonus paid was independent of the number of males.
+                                        What was the total amount paid to the females (in rupees)?</h2>
+                                <label><input type="radio" name="q5" value="1672.50"><span>1672.50</span></label>
+                                <label><input type="radio" name="q5" value="1222.50"><span>1222.50</span></label>
+                                <label><input type="radio" name="q5" value="2852.50"><span>2852.50</span></label>
+                                <label><input type="radio" name="q5" value="None of these"><span>None of
+                                                these</span></label>
+                                <textarea id="answer5" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(5)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(5)">Next</button>
+                        </div>
+
+                        <div class="question" id="question6">
+                                <h2>Question 6: Which of the following diode is used in adjustable band pass filter
+                                        electronic circuits?</h2>
+                                <label><input type="radio" name="q6" value="Zener diode"><span>Zener
+                                                diode</span></label>
+                                <label><input type="radio" name="q6" value="Varactor diode"><span>Varactor
+                                                diode</span></label>
+                                <label><input type="radio" name="q6" value="Tunnel diode"><span>Tunnel
+                                                diode</span></label>
+                                <label><input type="radio" name="q6" value="Schottky diode"><span>Schottky
+                                                diode</span></label>
+                                <textarea id="answer6" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Reason here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(6)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(6)">Next</button>
+                        </div>
+
+                        <div class="question" id="question7">
+                                <h2>Question 7: Which of the following type of transistor is preferred in digital and
+                                        analog electronic circuits?</h2>
+                                <label><input type="radio" name="q7" value="BJT"><span>BJT</span></label>
+                                <label><input type="radio" name="q7" value="JFET"><span>JFET</span></label>
+                                <label><input type="radio" name="q7" value="MOSFET"><span>MOSFET</span></label>
+                                <label><input type="radio" name="q7" value="FET"><span>FET</span></label>
+                                <textarea id="answer7" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Reason here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(7)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(7)">Next</button>
+                        </div>
+
+                        <div class="question" id="question8">
+                                <h2>Question 8: If a silicon diode is operating in a forward biased circuit with 12V
+                                        supply and 240 ohm resistor. What is the voltage drop across the diode?</h2>
+                                <label><input type="radio" name="q8" value="1.5V"><span>1.5V</span></label>
+                                <label><input type="radio" name="q8" value="12V"><span>12V</span></label>
+                                <label><input type="radio" name="q8" value="6V"><span>6V</span></label>
+                                <label><input type="radio" name="q8" value="0.7V"><span>0.7V</span></label>
+                                <textarea id="answer8" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(8)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(8)">Next</button>
+                        </div>
+
+                        <div class="question" id="question9">
+                                <h2>Question 9: What will happen if a variable is declared as volatile?</h2>
+                                <pre class="code-sample">volatile int x;</pre>
+                                <label><input type="radio" name="q9"
+                                                value="The compiler may optimise access to x"><span>The compiler may
+                                                optimise access to x</span></label>
+                                <label><input type="radio" name="q9"
+                                                value="The compiler will always read the value of x from memory"><span>The
+                                                compiler will always read the value of x from memory</span></label>
+                                <label><input type="radio" name="q9"
+                                                value="x cannot be modified outside of its scope"><span>x cannot be
+                                                modified outside of its scope</span></label>
+                                <label><input type="radio" name="q9"
+                                                value="The variable x cannot be used in expressions"><span>The variable
+                                                x cannot be used in expressions</span></label>
+                                <textarea id="answer9" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Reason here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(9)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(9)">Next</button>
+                        </div>
+
+                        <div class="question" id="question10">
+                                <h2>Question 10: What will be the output of the following code?</h2>
+                                <pre class="code-sample">
+#include <stdio.h>
+#include <stdlib.h>
+int main() {
+        int *arr = (int *)malloc(5 * sizeof(int));
+        if (arr == NULL) {
+                printf("Memory allocation failed\n");
+                return 1;
+        }
+        for (int i = 0; i < 5; i++) {
+                arr[i] = i + 1;
+        }
+        printf("%d\n", arr[5]);
+        free(arr);
+        return 0;
+}
+                                </pre>
+                                <label><input type="radio" name="q10" value="5"><span>5</span></label>
+                                <label><input type="radio" name="q10" value="6"><span>6</span></label>
+                                <label><input type="radio" name="q10" value="Undefined behaviour"><span>Undefined
+                                                behaviour</span></label>
+                                <label><input type="radio" name="q10" value="Memory allocation failed"><span>Memory
+                                                allocation failed</span></label>
+                                <textarea id="answer10" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Reason here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(10)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(10)">Next</button>
+                        </div>
+
+                        <div class="question" id="question11">
+                                <h2>Question 11: What will be the output of the following code?</h2>
+                                <pre class="code-sample">
+#include<stdio.h>
+int main()
+{
+        int a[4]={1,2,3,4};
+        int b[4]={1,2,3,4};
+        int n=&b[3]-&a[2];
+        printf(“%d\n”,n);
+}                   
+                                </pre>
+                                <label><input type="radio" name="q11" value="5"><span>5</span></label>
+                                <label><input type="radio" name="q11" value="6"><span>6</span></label>
+                                <label><input type="radio" name="q11" value="Undefined behaviour"><span>Undefined
+                                                behaviour</span></label>
+                                <label><input type="radio" name="q11" value="-3"><span>-3</span></label>
+                                <textarea id="answer11" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Reason here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(11)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(11)">Next</button>
+                        </div>
+
+                        <div class="question" id="question12">
+                                <h2>Question 12: Consider the following code snippet?</h2>
+                                <pre class="code-sample">
+struct A {
+        int x;
+        double y;
+};
+
+struct B {
+        char c;
+        struct A a;
+};                               
+                                </pre>
+                                <h2>What is the minimum size of struct B on a typical 64-bit architecture, assuming no
+                                        padding is added?</h2>
+                                <label><input type="radio" name="q12" value="9 bytes"><span>9 bytes</span></label>
+                                <label><input type="radio" name="q12" value="10 bytes"><span>10 bytes</span></label>
+                                <label><input type="radio" name="q12" value="16 bytes"><span>16 bytes</span></label>
+                                <label><input type="radio" name="q12" value="18 bytes"><span>18 bytes</span></label>
+                                <textarea id="answer12" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Reason here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(12)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(12)">Next</button>
+                        </div>
+
+                        <div class="question" id="question13">
+                                <h2>Question 13: Write a program in C for the below game.
+                                        Players take turns removing less than 5 matchsticks from a pile of 21
+                                        matchsticks. The player who removes the last matchstick loses.</h2>
+                                <h2>Note: Program should always win</h2>
+                                <textarea id="answer13" class="styled-textarea" rows="10" cols="50"
+                                        placeholder="Type your C program here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(13)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(13)">Next</button>
+                        </div>
+
+                        <div class="question" id="question14">
+                                <h2>Question 14: A traffic signal cycles from GREEN to YELLOW, YELLOW to RED and RED to
+                                        GREEN. In each cycle, GREEN is turned on for 70 seconds, YELLOW is turned on for
+                                        5 seconds and the RED is turned on for 75 seconds. This traffic light has to be
+                                        implemented using a finite state machine (FSM). The only input to this FSM is a
+                                        clock of 5 second period. The minimum number of flip-flops required to implement
+                                        this FSM is?</h2>
+                                <label><input type="radio" name="q14" value="5"><span>5</span></label>
+                                <label><input type="radio" name="q14" value="7"><span>7</span></label>
+                                <label><input type="radio" name="q14" value="10"><span>10</span></label>
+                                <label><input type="radio" name="q14" value="13"><span>13</span></label>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(14)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(14)">Next</button>
+                        </div>
+
+                        <div class="question" id="question15">
+                                <h2>Question 15: The SOP (sum of products) form of a Boolean function is ∑(0, 1, 3, 7,
+                                        11), where inputs are A, B, C, D (A is MSB, and D is LSB). The equivalent
+                                        minimized expression of the function is?</h2>
+                                <label><input type="radio" name="q15" value="(B + C)(A + C)(A + B)(C + D)"><span>(B +
+                                                C)(A + C)(A + B)(C + D)</span></label>
+                                <label><input type="radio" name="q15" value="(B + C)(A + C)(A + C)(C + D)"><span>(B +
+                                                C)(A + C)(A + C)(C + D)</span></label>
+                                <label><input type="radio" name="q15" value="(B + C)(A + C)(A = C)(C + D)"><span>(B +
+                                                C)(A + C)(A = C)(C + D)</span></label>
+                                <label><input type="radio" name="q15" value="(B + C)(A + B)(A + B)(C + D)"><span>(B +
+                                                C)(A + B)(A + B)(C + D)</span></label>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(15)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(15)">Next</button>
+                        </div>
+
+                        <div class="question" id="question16">
+                                <h2>Question 16: Consider a 4 bit Johnson counter with an initial value of 0000. The
+                                        counting sequence of this counter is?</h2>
+                                <label><input type="radio" name="q16" value="0, 1, 3, 7, 15, 14, 12, 8, 0"><span>0, 1,
+                                                3, 7, 15, 14, 12, 8, 0</span></label>
+                                <label><input type="radio" name="q16" value="0, 1, 3, 5, 7, 9, 11, 13, 15, 0"><span>0,
+                                                1, 3, 5, 7, 9, 11, 13, 15, 0</span></label>
+                                <label><input type="radio" name="q16" value="0, 2, 4, 6, 8, 10, 12, 14, 0"><span>0, 2,
+                                                4, 6, 8, 10, 12, 14, 0</span></label>
+                                <label><input type="radio" name="q16" value="0, 8, 12, 14, 15, 7, 3, 1, 0"><span>0, 8,
+                                                12, 14, 15, 7, 3, 1, 0</span></label>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(16)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(16)">Next</button>
+                        </div>
+
+                        <div class="question" id="question17">
+                                <h2>Question 17: If x and y are two decimal digits and (0.1101)2 =(0.8xy5)10 the decimal
+                                        value of x+y is?</h2>
+                                <textarea id="answer17" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(17)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(17)">Next</button>
+                        </div>
+
+                        <div class="question" id="question18">
+                                <h2>Question 18: Write the equation for Y? </h2>
+                                <img src="question18.jpg" style="width: 500px; height: 250px;" />
+                                <textarea id="answer18" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(18)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(18)">Next</button>
+                        </div>
+
+                        <div class="question" id="question19">
+                                <h2>Question 19: In the circuit shown, diodes are ideal, and the inputs are “0 V” for
+                                        logic ‘0’ and “10 V” for logic ‘1’. What logic gate does the circuit represent?
+                                </h2>
+                                <img src="question19.jpg" style="width: 400px; height: 350px;" />
+                                <label><input type="radio" name="q19" value="3-input NOR gate"><span>3-input NOR
+                                                gate</span></label>
+                                <label><input type="radio" name="q19" value="3-input AND gate"><span>3-input AND
+                                                gate</span></label>
+                                <label><input type="radio" name="q19" value="3-input XOR gate"><span>3-input XOR
+                                                gate</span></label>
+                                <label><input type="radio" name="q19" value="3-input OR gate"><span>3-input OR
+                                                gate</span></label>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(19)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(19)">Next</button>
+                        </div>
+
+                        <div class="question" id="question20">
+                                <h2>Question 20: In a five bit binary ladder D/A converter ,if the value of R is
+                                        1Kohm,2R is 2Kohm and voltage levels are 0=0V and 1=+6V, then the current ,which
+                                        each digital input voltage source can supply is?</h2>
+                                <label><input type="radio" name="q20" value="3mA"><span>3mA</span></label>
+                                <label><input type="radio" name="q20" value="2mA"><span>2mA</span></label>
+                                <label><input type="radio" name="q20" value="5mA"><span>5mA</span></label>
+                                <label><input type="radio" name="q20" value="7mA"><span>7mA</span></label>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(20)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(20)">Next</button>
+                        </div>
+
+                        <div class="question" id="question21">
+                                <h2>Question 21: What is the closed-loop DC-gain of the following circuit?</h2>
+                                <img src="question21.jpg" style="width: 400px; height: 350px;" />
+                                <textarea id="answer21" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(21)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(21)">Next</button>
+                        </div>
+
+                        <div class="question" id="question22">
+                                <h2>Question 22: Find V1 and V2 in the circuit given below using nodal analysis?</h2>
+                                <img src="question22.jpg" />
+                                <textarea id="answer22" class="styled-textarea" rows="10" cols="5"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(22)">Back</button>
+                                <button class="next-btn" id="nextBtn" onclick="nextQuestion(22)">Next</button>
+                        </div>
+
+                        <div class="question" id="question23">
+                                <h2>Question 23: Consider the circuit shown with an ideal OPAMP. The output voltage V0
+                                        is (rounded off to two decimal places)?</h2>
+                                <img src="question23.jpg" style="width: 850px; height: 350px;" />
+                                <textarea id="answer23" class="styled-textarea" rows="10" cols="50"
+                                        placeholder="Type your Answer here..."></textarea>
+                                <button class="back-btn" id="backBtn" onclick="prevQuestion(23)">Back</button>
+                                <button class="submit-btn" id="submitBtn" onclick="submitExam()">Submit</button>
+                        </div>
+
+                </div>
+
+                <div class="thank-you-message" id="thank-you-message">Thank you for completing the Admission Test!</div>
+        </div>
+
+        <script>
+                let currentQuestion = 0;
+                let timer;
+                let timeLeft = 5400; // 90 minutes in seconds
+
+                function startExam() {
+                        const name = document.getElementById("name").value.trim();
+                        const college = document.getElementById("college").value.trim();
+                        const email = document.getElementById("email").value.trim();
+                        const mobile = document.getElementById("mobile").value.trim();
+
+                        if (name === "" || college === "" || email === "" || mobile === "") {
+                                alert("Please enter all your details before starting the Test.");
+                                return;
+                        }
+
+                        const mobileInput = document.getElementById('mobile');
+                        if (mobileInput.value.length !== 10) {
+                                alert('Please enter a valid 10-digit mobile number.');
+                                return;
+                        }
+
+                        document.getElementById("user-info").style.display = "none";
+                        document.getElementById("exam-form").style.display = "block";
+                        document.getElementById("question1").style.display = "block";
+
+                        startTimer();
+                }
+
+                function startTimer() {
+                        timer = setInterval(() => {
+                                if (timeLeft <= 0) {
+                                        clearInterval(timer);
+                                        alert("Time's up! The Test will be submitted automatically.");
+                                        submitExam1();
+                                } else {
+                                        const hours = Math.floor(timeLeft / 3600);
+                                        const minutes = Math.floor((timeLeft % 3600) / 60);
+                                        const seconds = timeLeft % 60;
+                                        document.getElementById("timer").textContent =
+                                                `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                                        timeLeft--;
+                                }
+                        }, 1000);
+                }
+
+                function nextQuestion(questionIndex) {
+
+                        const currentQuestionEl = document.getElementById(`question${questionIndex}`);
+                        const selectedOption = currentQuestionEl.querySelector('input[type="radio"]:checked');
+
+
+                        currentQuestionEl.style.display = "none"; // Hide current question
+                        currentQuestion++; // Move to the next question
+                        const nextQuestionEl = document.getElementById(`question${currentQuestion + 1}`);
+                        nextQuestionEl.style.display = "block"; // Show next question
+                }
+
+                function prevQuestion(questionIndex) {
+
+                        const currentQuestionEl = document.getElementById(`question${questionIndex}`);
+                        currentQuestionEl.style.display = "none"; // Hide current question
+                        currentQuestion--; // Move to the previous question
+                        const prevQuestionEl = document.getElementById(`question${currentQuestion + 1}`);
+                        prevQuestionEl.style.display = "block"; // Show previous question
+                }
+
+
+                function submitExam() {
+                        const name = document.getElementById('name').value;
+                        clearInterval(timer); // Stop the timer
+                        const answers = {
+                                name: document.getElementById("name").value,
+                                college: document.getElementById("college").value,
+                                email: document.getElementById("email").value,
+                                mobile: document.getElementById("mobile").value,
+                                q1: (document.querySelector('input[name="q1"]:checked')?.value || "") +
+                                        (document.getElementById("answer1").value ? " " + document.getElementById("answer1").value : ""),
+                                q2: (document.querySelector('input[name="q2"]:checked')?.value || "") +
+                                        (document.getElementById("answer2").value ? " " + document.getElementById("answer2").value : ""),
+                                q3: (document.querySelector('input[name="q3"]:checked')?.value || "") +
+                                        (document.getElementById("answer3").value ? " " + document.getElementById("answer3").value : ""),
+                                q4: (document.querySelector('input[name="q4"]:checked')?.value || "") +
+                                        (document.getElementById("answer4").value ? " " + document.getElementById("answer4").value : ""),
+                                q5: (document.querySelector('input[name="q5"]:checked')?.value || "") +
+                                        (document.getElementById("answer5").value ? " " + document.getElementById("answer5").value : ""),
+                                q6: (document.querySelector('input[name="q6"]:checked')?.value || "") +
+                                        (document.getElementById("answer6").value ? " " + document.getElementById("answer6").value : ""),
+                                q7: (document.querySelector('input[name="q7"]:checked')?.value || "") +
+                                        (document.getElementById("answer7").value ? " " + document.getElementById("answer7").value : ""),
+                                q8: (document.querySelector('input[name="q8"]:checked')?.value || "") +
+                                        (document.getElementById("answer8").value ? " " + document.getElementById("answer8").value : ""),
+                                q9: (document.querySelector('input[name="q9"]:checked')?.value || "") +
+                                        (document.getElementById("answer9").value ? " " + document.getElementById("answer9").value : ""),
+                                q10: (document.querySelector('input[name="q10"]:checked')?.value || "") +
+                                        (document.getElementById("answer10").value ? " " + document.getElementById("answer10").value : ""),
+                                q11: (document.querySelector('input[name="q11"]:checked')?.value || "") +
+                                        (document.getElementById("answer11").value ? " " + document.getElementById("answer11").value : ""),
+                                q12: (document.querySelector('input[name="q12"]:checked')?.value || "") +
+                                        (document.getElementById("answer12").value ? " " + document.getElementById("answer12").value : ""),
+                                q13: document.getElementById("answer13").value,
+                                q14: document.querySelector('input[name="q14"]:checked')?.value,
+                                q15: document.querySelector('input[name="q15"]:checked')?.value,
+                                q16: document.querySelector('input[name="q16"]:checked')?.value,
+                                q17: document.getElementById("answer17").value,
+                                q18: document.getElementById("answer18").value,
+                                q19: document.querySelector('input[name="q19"]:checked')?.value,
+                                q20: document.querySelector('input[name="q20"]:checked')?.value,
+                                q21: document.getElementById("answer21").value,
+                                q22: document.getElementById("answer22").value,
+                                q23: document.getElementById("answer23").value,
+
+                        };
+
+                        const userInfo = `Name: ${answers.name}\nCollege: ${answers.college}\nEmail: ${answers.email}\nMobile: ${answers.mobile}\n\nAnswers:\nQuestion 1: ${answers.q1}\nQuestion 2: ${answers.q2}\nQuestion 3: ${answers.q3}\nQuestion 4: ${answers.q4} \nQuestion 5: ${answers.q5}\nQuestion 6: ${answers.q6}\nQuestion 7: ${answers.q7}\nQuestion 8: ${answers.q8}\nQuestion 9: ${answers.q9} \nQuestion 10: ${answers.q10}\nQuestion 11: ${answers.q11}\nQuestion 12: ${answers.q12}\nQuestion 13: ${answers.q13}\nQuestion 14: ${answers.q14} \nQuestion 15: ${answers.q15}\nQuestion 16: ${answers.q16}\nQuestion 17: ${answers.q17}\nQuestion 18: ${answers.q18}\nQuestion 19: ${answers.q19} \nQuestion 20: ${answers.q20}\nQuestion 21: ${answers.q21}\nQuestion 22: ${answers.q22}\nQuestion 23: ${answers.q23}`;
+                        const blob = new Blob([userInfo], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${name}_Answers.txt`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+
+                        document.getElementById("exam-form").style.display = "none";
+                        document.getElementById("thank-you-message").style.display = "block";
+                }
+
+                function validateTextInput(input) {
+                        const regex = /^[a-zA-Z\s]*$/; // Only allows letters and spaces
+                        input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+                }
+
+                function validateMobileInput(input) {
+                        const regex = /^[0-9]*$/; // Only allows numbers
+                        input.value = input.value.replace(/[^0-9]/g, '');
+                        if (input.value.length > 10) {
+                                input.value = input.value.slice(0, 10);
+                        }
+                }
+
+
+        </script>
+        <script>
+                if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.register('service-worker.js')
+                                .then(reg => console.log('Service Worker Registered'))
+                                .catch(err => console.log('Service Worker registration failed:', err));
+                }
+        </script>
+</body>
+
+</html>
